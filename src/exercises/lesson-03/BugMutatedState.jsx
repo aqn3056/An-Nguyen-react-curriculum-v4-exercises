@@ -10,11 +10,10 @@
 
 import { useState } from 'react';
 export default function BugMutatedState() {
-  let [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
 
   function handleAdd() {
-    count++;
-    setCount(count);
+    setCount(count + 1);
   }
 
   return (
@@ -26,4 +25,9 @@ export default function BugMutatedState() {
 }
 
 // Explanation:
-// (Write your explanation here)
+// The original code used `count++`, which mutates the local variable in place
+// before calling setCount. React state should be treated as immutable: you
+// compute a new value and hand it to the setter (setCount(count + 1)) so
+// React can compare the new value to the old and decide to re-render.
+// Mutating the existing value sidesteps that contract and leads to
+// unreliable updates, especially with objects and arrays.

@@ -12,11 +12,13 @@
   Use the commented "Explanation" section at the bottom of this lesson's components.
 */
 
+import { useState } from 'react';
+
 export default function BugProps({ name = 'friend' }) {
-  let message = 'Hello, ' + name;
+  const [message, setMessage] = useState('Hello, ' + name);
 
   function handleChange() {
-    message = 'Hi, ' + name + '!';
+    setMessage('Hi, ' + name + '!');
   }
 
   return (
@@ -28,4 +30,9 @@ export default function BugProps({ name = 'friend' }) {
 }
 
 // Explanation:
-// (Write your explanation here)
+// `message` was a plain local variable, so reassigning it in handleChange
+// had no effect on the UI — React only re-renders when something it tracks
+// (state or props) changes. Every render also reset the variable back to
+// its initial value. Moving the message into useState makes React aware of
+// it: calling setMessage queues a re-render with the new value, so the
+// updated greeting actually appears on the screen.
