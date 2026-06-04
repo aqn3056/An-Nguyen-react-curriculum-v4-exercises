@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   useRenderCounter,
   RenderCounter,
@@ -8,18 +9,13 @@ import styles from './BookStats.module.css';
 function BookStats({ books }) {
   const { count } = useRenderCounter('BookStats');
 
-  // TODO #4: Optimize these expensive calculations with useMemo
-  // These calculations run every time the component renders,
-  // even when the books array hasn't changed
   const calculateStats = () => {
-    // eslint-disable-next-line react-hooks/purity
     const startTime = performance.now();
 
     // Add some artificial computational load to make timing more visible
     // do not remove!
     let dummy = 0;
     for (let i = 0; i < 10000; i++) {
-      // eslint-disable-next-line react-hooks/purity
       dummy += Math.random();
     }
 
@@ -27,7 +23,6 @@ function BookStats({ books }) {
 
     // Handle empty books array
     if (totalBooks === 0) {
-      // eslint-disable-next-line react-hooks/purity
       const endTime = performance.now();
       const calculationTime = endTime - startTime;
       const microseconds = calculationTime * 1000;
@@ -68,7 +63,6 @@ function BookStats({ books }) {
       dummy += Math.sqrt(i);
     }
 
-    // eslint-disable-next-line react-hooks/purity
     const endTime = performance.now();
     const calculationTime = endTime - startTime;
     const microseconds = calculationTime * 1000;
@@ -89,7 +83,8 @@ function BookStats({ books }) {
     };
   };
 
-  const stats = calculateStats();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const stats = useMemo(() => calculateStats(), [books]);
 
   return (
     <div className={styles.statsContainer}>
